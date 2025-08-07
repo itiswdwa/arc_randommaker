@@ -1,0 +1,2 @@
+# arc_randommaker
+拿arcaea里扒出来的资源做的随机数模拟器
