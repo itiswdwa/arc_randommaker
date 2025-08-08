@@ -1,0 +1,180 @@
+<html>
+
+<head>
+    <title>Card Random Maker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/src/js/jquery-3.7.1.slim.min.js"></script>
+    <style>
+        body {
+            background-image: url('/src/img/bg.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin: 0;
+        }
+
+        #randico {
+            position: relative;
+            height: 50%;
+            width: auto;
+            transform: rotate(-5deg);
+            left: 15%;
+            bottom: 1%;
+        }
+
+        #song_cell_right {
+            position: absolute;
+            right: 0;
+            bottom: 65%;
+            width: 40%;
+            height: auto;
+        }
+
+        #selectimg {
+            height: 10%;
+            width: auto;
+        }
+
+        #shutter_right {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 9999;
+            transition: left 1s ease, right 1s ease;
+        }
+
+        #shutter_left {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 9999;
+            transition: left 1s ease, right 1s ease;
+        }
+
+        .shutter-hide-left {
+            left: -100vw !important;
+        }
+
+        .shutter-hide-right {
+            right: -100vw !important;
+        }
+
+        #close {
+            position: fixed;
+            bottom: 1%;
+            right: 45%;
+            width: 5%;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        href_go = 'rand?num=1';
+        function go(num) {
+            if (num == 1) {
+                href_go = 'rand?num=1';
+                $('body').css('background-image', 'url(/src/img/bg.jpg)');
+                $('#r').css('color', 'black');
+                $("#randico").attr("src", "/src/img/unknown_icon.png");
+                $("#song_cell_right").attr("src", "/src/img/song_cell_right_1.png");
+            }
+            else if (num == 2) {
+                href_go = 'rand?num=2';
+                $('body').css('background-image', 'url(/src/img/bg.jpg)');
+                $('#r').css('color', 'black');
+                $("#randico").attr("src", "/src/img/unknown_icon.png");
+                $("#song_cell_right").attr("src", "/src/img/song_cell_right_2.png");
+            }
+            else if (num == 9) {
+                href_go = 'rand?num=9';
+                $('body').css('background-image', 'url(/src/img/bg.jpg)');
+                $('#r').css('color', 'black');
+                $("#randico").attr("src", "/src/img/unknown_icon.png");
+                $("#song_cell_right").attr("src", "/src/img/song_cell_right_9.png");
+            }
+            else if (num == 10) {
+                href_go = 'rand?num=10';
+                $('body').css('background-image', 'url(/src/img/bg_byd_dark.jpg)');
+                $('#r').css('color', 'white');
+                $("#randico").attr("src", "/src/img/song_byd_unknown.png");
+                $("#song_cell_right").attr("src", "/src/img/song_cell_right_10.png");
+            }
+        }
+        function gotorand() {
+            window.location.href = href_go;
+        }
+
+        originalWidth = 792;
+        originalHeight = 123;
+        areas = [
+            {coords: [0,0,260,123], alt: "1"},
+            {coords: [260,0,425,123], alt: "2"},
+            {coords: [425,0,600,123], alt: "9"},
+            {coords: [600,0,792,123], alt: "10"}
+        ];
+
+        function resizeMapAreas() {
+            var $img = $('#selectimg');
+            var $areas = $('map[name="selectmap"] area');
+            if (!$img[0].complete) return;
+
+            var scaleX = $img.width() / originalWidth;
+            var scaleY = $img.height() / originalHeight;
+
+            $.each(areas, function(i, area) {
+                var scaled = $.map(area.coords, function(v, idx) {
+                    return idx % 2 === 0 ? Math.round(v * scaleX) : Math.round(v * scaleY);
+                });
+                $areas.eq(i).attr('coords', scaled.join(','));
+            });
+        }
+
+        function resizeFont() {
+            var winWidth = $(window).width();
+            // 以窗口宽度的5%为字体大小，可根据实际需求调整比例
+            var fontSize = Math.max(20, winWidth * 0.05);
+            $('#r').css('font-size', fontSize + 'px');
+        }
+
+        $(window).on('resize', function() {
+            resizeMapAreas();
+            resizeFont();
+        });
+        $(function() {
+            var $img = $('#selectimg');
+            $img.on('load', resizeMapAreas);
+            if ($img[0].complete) resizeMapAreas();
+            resizeFont();
+            $('#rand10').click()
+            // 遮罩动画：页面加载后让左右遮罩滑出
+            setTimeout(function() {
+                $('#shutter_left').addClass('shutter-hide-left');
+                $('#shutter_right').addClass('shutter-hide-right');
+            }, 200); // 可调整延迟时间
+        });
+    </script>
+</head>
+
+<body>
+    
+    <img src="/src/img/shutter-1-withoverlay.png" id="shutter_left">
+    <img src="/src/img/shutter-2.png" id="shutter_right">
+    <br />
+    <br />
+    <map name="selectmap">
+        <area shape="rect" coords="0,0,260,123" onclick="go(1)" alt="1">
+        <area shape="rect" coords="260,0,425,123" onclick="go(2)" alt="2">
+        <area shape="rect" coords="425,0,600,123" onclick="go(9)" alt="9">
+        <area shape="rect" coords="600,0,792,123" onclick="go(10)" alt="10" id="rand10">
+    </map>
+    <img src="/src/img/select.png" usemap="#selectmap" id="selectimg"></img>
+    <h1 style="font-family: Arial, sans-serif;font-weight: 100; font-size: 55px;" id="r">Random Songs</h1>
+    <img src="/src/img/unknown_icon.png" id="randico">
+    <img src="/src/img/song_cell_right_1.png" id="song_cell_right" onclick="gotorand()" alt="Song Cell Right" style="cursor: pointer;">
+    <img src="/src/img/alterego-close.png" id="close" onclick="window.opener=null;window.close();">
+</body>
+
+</html>

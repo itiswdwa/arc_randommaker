@@ -1,0 +1,278 @@
+<html>
+
+<head>
+    <title>Card Random Maker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/src/js/jquery-3.7.1.slim.min.js"></script>
+    <style>
+        body {
+            background: black;
+        }
+
+        * {
+            overflow: hidden;
+        }
+
+        .glass-card-white {
+            display: none;
+            background: rgba(255, 255, 255, 0.23);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow:
+                0 8px 32px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5),
+                inset 0 -1px 0 rgba(255, 255, 255, 0.1),
+                inset 0 0 30px 15px rgba(255, 255, 255, 1.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card-white::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg,
+                    transparent,
+                    rgba(255, 255, 255, 0.8),
+                    transparent);
+        }
+
+        .glass-card-white::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1px;
+            height: 100%;
+            background: linear-gradient(180deg,
+                    rgba(255, 255, 255, 0.8),
+                    transparent,
+                    rgba(255, 255, 255, 0.3));
+        }
+
+        .glass-card-black {
+            display: none;
+            background: rgba(0, 0, 0, 0.24);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(0, 0, 0, 0.3);
+            box-shadow:
+                0 8px 32px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(0, 0, 0, 0.5),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+                inset 0 0 0px 0px rgba(0, 0, 0, 0);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card-black::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg,
+                    transparent,
+                    rgba(0, 0, 0, 0.8),
+                    transparent);
+        }
+
+        .glass-card-black::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1px;
+            height: 100%;
+            background: linear-gradient(180deg,
+                    rgba(0, 0, 0, 0.8),
+                    transparent,
+                    rgba(0, 0, 0, 0.3));
+        }
+
+        .container_f {
+            display: flex;
+            visibility: hidden;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            width: 100vh;
+            height: 60vh;
+            margin: auto;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 0;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+
+        video {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        video::-webkit-media-controls-fullscreen-button {
+            display: none;
+        }
+
+        video::-webkit-media-controls-play-button {
+            display: none;
+        }
+
+        video::-webkit-media-controls-timeline {
+            display: none;
+        }
+
+        video::-webkit-media-controls-current-time-display {
+            display: none;
+        }
+
+        video::-webkit-media-controls-time-remaining-display {
+            display: none;
+        }
+
+        video::-webkit-media-controls-mute-button {
+            display: none;
+        }
+
+        video::-webkit-media-controls-toggle-closed-captions-button {
+            display: none;
+        }
+
+        video::-webkit-media-controls-volume-slider {
+            display: none;
+        }
+
+        video::-webkit-media-controls-enclosure {
+            display: none;
+        }
+
+        @font-face {
+            font-family: 'OS4';
+            src: url('/src/font/os4.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        #card_span {
+            font-family: 'OS4', sans-serif;
+        }
+
+        #rand_res {
+            margin: 0;
+            width: 100%;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #again {
+            position: absolute;
+            align-self: center;
+            right: 0;
+            top: 0;
+            cursor: pointer;
+        }
+
+        #skip {
+            position: absolute;
+            bottom: 0;
+            right: 45%;
+            cursor: pointer;
+        }
+
+        #close {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 3%;
+            width: auto;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        time_show = "{{ time_show }} "
+        time_show = parseInt(time_show.replace(/\s*/g, ""))
+
+        function clickbtn() {
+            jQuery("#bg_vid").get(0).play()
+        }
+
+        jQuery(document).ready(function () {
+            jQuery.noConflict()
+            video = jQuery("#bg_vid")
+            jQuery("#btn_st").click()
+            video.on("timeupdate", function () {
+                var currentTime = video[0].currentTime
+                console.log(currentTime)
+
+                if (parseInt(currentTime) == time_show) {
+                    jQuery(".glass-card-{{ pv_type }}").css("visibility", "visible");
+                    console.log("set ok.")
+                }
+
+            })
+        })
+
+        function skip() {
+            jQuery("#bg_vid").get(0).currentTime = time_show
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <video autoplay="autoplay" id="bg_vid">
+            <source src="src/vid/{{ pv }}.mp4" type="video/mp4">
+        </video>
+
+    </div>
+    <div class="container_f glass-card-{{ pv_type }}">
+        <h1 id="rand_res" class="">
+            {% if list|length == 10 %}
+            {% for i in list[0:5] %}
+            <span id="card_span">{{ i }}</span>&nbsp;&nbsp;
+            {% endfor %}
+            <br>
+            <br>
+            {% for i in list[5:10] %}
+            <span id="card_span">{{ i }}</span>&nbsp;&nbsp;
+            {% endfor %}
+            {% elif list|length == 9 %}
+            {% for i in list[0:4] %}
+            <span id="card_span">{{ i }}</span>&nbsp;&nbsp;
+            {% endfor %}
+            <br>
+            <br>
+            {% for i in list[4:9] %}
+            <span id="card_span">{{ i }}</span>&nbsp;&nbsp;
+            {% endfor %}
+            {% else %}
+            {% for i in list %}
+            <span id="card_span">{{ i }}</span>&nbsp;&nbsp;
+            {% endfor %}
+            {% endif %}
+        </h1>
+    </div>
+    <img src="/src/img/again.png" id="again" onclick="window.location.reload()">
+    <img src="/src/img/skip.png" id="skip" onclick="skip()">
+    <img src="/src/img/close.png" id="close" onclick="window.opener=null;window.close();">
+</body>
+
+</html>

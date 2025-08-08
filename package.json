@@ -1,0 +1,24 @@
+{
+  "name": "random_maker",
+  "version": "1.3.0b3",
+  "description": "A project that generates random values.",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "electron-packager ./ RandomMaker --win --arch=x64 --out ./dist --icon=favicon.ico --overwrite && copy favicon.ico dist/RandomMaker/favicon.ico && copy lib dist/RandomMaker/lib"
+  },
+  "dependencies": {
+    "childprocess": "^2.0.2",
+    
+    "express": "^4.17.1",
+    "jquery": "^3.7.1"
+  },
+  "author": "itiswdwa",
+  "license": "MIT",
+  "type": "commonjs",
+  "devDependencies": {
+    "electron-packager": "^17.1.2",
+    "electron": "^37.2.4"
+  }
+}
