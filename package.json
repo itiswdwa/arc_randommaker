@@ -6,7 +6,7 @@
   "scripts": {
     "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "electron-packager ./ RandomMaker --win --arch=x64 --out ./dist --icon=favicon.ico --overwrite && copy favicon.ico dist/RandomMaker/favicon.ico && copy lib dist/RandomMaker/lib"
+    "build": "electron-packager ./ RandomMaker --win --arch=x64 --out ./dist --icon=favicon.ico --overwrite && cd dist/RandomMaker-win32-x64/ && mkdir lib && cd lib && xcopy /E /I ..\\..\\..\\lib\\"
   },
   "dependencies": {
     "childprocess": "^2.0.2",
